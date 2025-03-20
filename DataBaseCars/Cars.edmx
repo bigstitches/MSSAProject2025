@@ -1,0 +1,177 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="PCAD16BooksModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Cars">
+          <Key>
+            <PropertyRef Name="VIN" />
+          </Key>
+          <Property Name="VIN" Type="int" Nullable="false" />
+          <Property Name="Make" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Model" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Year" Type="int" />
+          <Property Name="Price" Type="money" />
+        </EntityType>
+        <EntityType Name="Dealership">
+          <Key>
+            <PropertyRef Name="DealerId" />
+          </Key>
+          <Property Name="CarVin" Type="int" Nullable="false" />
+          <Property Name="DealerId" Type="int" Nullable="false" />
+          <Property Name="Salesmen" Type="nchar" MaxLength="10" />
+          <Property Name="Dealership" Type="nchar" MaxLength="10" />
+        </EntityType>
+        <Association Name="FK_Cars_Cars">
+          <End Role="Cars" Type="Self.Cars" Multiplicity="1" />
+          <End Role="Cars1" Type="Self.Cars" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="Cars">
+              <PropertyRef Name="VIN" />
+            </Principal>
+            <Dependent Role="Cars1">
+              <PropertyRef Name="VIN" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Dealership_Cars">
+          <End Role="Cars" Type="Self.Cars" Multiplicity="1" />
+          <End Role="Dealership" Type="Self.Dealership" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="Cars">
+              <PropertyRef Name="VIN" />
+            </Principal>
+            <Dependent Role="Dealership">
+              <PropertyRef Name="DealerId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="PCAD16BooksModelStoreContainer">
+          <EntitySet Name="Cars" EntityType="Self.Cars" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Dealership" EntityType="Self.Dealership" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_Cars_Cars" Association="Self.FK_Cars_Cars">
+            <End Role="Cars" EntitySet="Cars" />
+            <End Role="Cars1" EntitySet="Cars" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Dealership_Cars" Association="Self.FK_Dealership_Cars">
+            <End Role="Cars" EntitySet="Cars" />
+            <End Role="Dealership" EntitySet="Dealership" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="PCAD16BooksModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Car">
+          <Key>
+            <PropertyRef Name="VIN" />
+          </Key>
+          <Property Name="VIN" Type="Int32" Nullable="false" />
+          <Property Name="Make" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Model" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Year" Type="Int32" />
+          <Property Name="Price" Type="Decimal" Precision="19" Scale="4" />
+          <NavigationProperty Name="Cars1" Relationship="Self.FK_Cars_Cars" FromRole="Cars" ToRole="Cars1" />
+          <NavigationProperty Name="Car1" Relationship="Self.FK_Cars_Cars" FromRole="Cars1" ToRole="Cars" />
+          <NavigationProperty Name="Dealership" Relationship="Self.FK_Dealership_Cars" FromRole="Cars" ToRole="Dealership" />
+        </EntityType>
+        <EntityType Name="Dealership">
+          <Key>
+            <PropertyRef Name="DealerId" />
+          </Key>
+          <Property Name="CarVin" Type="Int32" Nullable="false" />
+          <Property Name="DealerId" Type="Int32" Nullable="false" />
+          <Property Name="Salesmen" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+          <Property Name="Dealership1" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+          <NavigationProperty Name="Car" Relationship="Self.FK_Dealership_Cars" FromRole="Dealership" ToRole="Cars" />
+        </EntityType>
+        <Association Name="FK_Cars_Cars">
+          <End Role="Cars" Type="Self.Car" Multiplicity="1" />
+          <End Role="Cars1" Type="Self.Car" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="Cars">
+              <PropertyRef Name="VIN" />
+            </Principal>
+            <Dependent Role="Cars1">
+              <PropertyRef Name="VIN" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Dealership_Cars">
+          <End Role="Cars" Type="Self.Car" Multiplicity="1" />
+          <End Role="Dealership" Type="Self.Dealership" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="Cars">
+              <PropertyRef Name="VIN" />
+            </Principal>
+            <Dependent Role="Dealership">
+              <PropertyRef Name="DealerId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="PCAD16BooksEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Cars" EntityType="Self.Car" />
+          <EntitySet Name="Dealerships" EntityType="Self.Dealership" />
+          <AssociationSet Name="FK_Cars_Cars" Association="Self.FK_Cars_Cars">
+            <End Role="Cars" EntitySet="Cars" />
+            <End Role="Cars1" EntitySet="Cars" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Dealership_Cars" Association="Self.FK_Dealership_Cars">
+            <End Role="Cars" EntitySet="Cars" />
+            <End Role="Dealership" EntitySet="Dealerships" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="PCAD16BooksModelStoreContainer" CdmEntityContainer="PCAD16BooksEntities">
+          <EntitySetMapping Name="Cars">
+            <EntityTypeMapping TypeName="PCAD16BooksModel.Car">
+              <MappingFragment StoreEntitySet="Cars">
+                <ScalarProperty Name="VIN" ColumnName="VIN" />
+                <ScalarProperty Name="Make" ColumnName="Make" />
+                <ScalarProperty Name="Model" ColumnName="Model" />
+                <ScalarProperty Name="Year" ColumnName="Year" />
+                <ScalarProperty Name="Price" ColumnName="Price" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Dealerships">
+            <EntityTypeMapping TypeName="PCAD16BooksModel.Dealership">
+              <MappingFragment StoreEntitySet="Dealership">
+                <ScalarProperty Name="CarVin" ColumnName="CarVin" />
+                <ScalarProperty Name="DealerId" ColumnName="DealerId" />
+                <ScalarProperty Name="Salesmen" ColumnName="Salesmen" />
+                <ScalarProperty Name="Dealership1" ColumnName="Dealership" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
